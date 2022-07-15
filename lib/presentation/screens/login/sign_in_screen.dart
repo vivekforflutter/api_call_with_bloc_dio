@@ -120,6 +120,7 @@ class _SignInState extends State<SignIn> with Validator{
                 Container(
                   margin: const EdgeInsets.fromLTRB(20, 50, 20, 10),
                   child: CustomTextField(
+                    autoValidate: AutovalidateMode.onUserInteraction,
                     controller: emailController,
                     obscureText: false,
                     hintText: "Username",
@@ -133,6 +134,7 @@ class _SignInState extends State<SignIn> with Validator{
                 Container(
                     margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                     child: CustomTextField(
+                      autoValidate: AutovalidateMode.disabled,
                       controller: passwordController,
                       obscureText: false,
                       hintText: "Password",

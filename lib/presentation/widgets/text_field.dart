@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool obscureText;
   final String hintText;
   final ValueChanged<String?> onChanged;
   final FormFieldValidator<String> validator;
+  final AutovalidateMode autoValidate;
   const CustomTextField({Key? key, required this.controller, required this.obscureText, required this.hintText, required this.onChanged,
-  required this.validator}) : super(key: key);
+    required this.validator, required this.autoValidate}) : super(key: key);
 
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: autoValidate,
       controller: controller,
       obscureText: obscureText,
       obscuringCharacter: "*",

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -13,7 +12,7 @@ mixin ApiHelper {
       Response response = await _dio.post(url, data: body.toJson());
 
     return {"statusCode":response.statusCode, "body": response.data, "errorMsg": null};
-  }catch(error, stacktrace){
+  }catch(error){
       return {"statusCode":49004, "body": null, "errorMsg": error.toString()};
     }
   }
