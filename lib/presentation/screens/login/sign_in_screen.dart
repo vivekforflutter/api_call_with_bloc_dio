@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:login_api_bloc/constant/text_field_validator.dart';
 import 'package:login_api_bloc/presentation/screens/login/bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:login_api_bloc/presentation/screens/login/repository/login_repository.dart';
+import 'package:login_api_bloc/presentation/screens/signup/sign_up_screen.dart';
 import '../../widgets/text_field.dart';
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -17,7 +19,7 @@ class _SignInState extends State<SignIn> with Validator{
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final formkey = GlobalKey<FormState>();
-    final LoginBloc _loginBloc = LoginBloc();
+    final LoginBloc _loginBloc = LoginBloc(LoginRepository());
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +158,9 @@ class _SignInState extends State<SignIn> with Validator{
                         'Register',
                         style: TextStyle(fontSize: 15,color: Colors.white),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SignUp()));
+                      },
                     )
                   ],
 

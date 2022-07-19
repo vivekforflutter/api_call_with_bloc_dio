@@ -9,7 +9,7 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginStateInitial()) {
+  LoginBloc(LoginRepository loginRepository) : super(LoginStateInitial()) {
     final LoginRepository repository = LoginRepository();
     on<LoginEvent>((event, emit) async{
 

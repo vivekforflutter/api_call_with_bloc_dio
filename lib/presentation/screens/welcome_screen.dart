@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:login_api_bloc/api/urls.dart';
-
+import 'package:login_api_bloc/presentation/screens/signup/sign_up_screen.dart';
 import '../../api/api_helper.dart';
 import 'login/sign_in_screen.dart';
 class WelcomeScreen extends StatefulWidget {
@@ -69,7 +68,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with ApiHelper{
                child: TabBar(
                  onTap: (i){
                    if(i==0){
-                     getTypeHelper(Url.usersUrl, {});
+                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SignUp()));
                    }else{
                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SignIn()));
                    }
