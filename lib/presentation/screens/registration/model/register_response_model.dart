@@ -1,15 +1,16 @@
-class SignUpResponseModel {
+class RegisterResponseModal {
   String? id;
   int? code;
   String? message;
   Data? data;
 
-  SignUpResponseModel({this.id, this.code, this.message, this.data});
-  SignUpResponseModel.withError(String errorMsg){
+  RegisterResponseModal({this.id, this.code, this.message, this.data});
+
+  RegisterResponseModal.withError(String errorMsg){
     message = errorMsg;
   }
 
-  SignUpResponseModel.fromJson(Map<String, dynamic> json) {
+  RegisterResponseModal.fromJson(Map<String, dynamic> json) {
     id = json['$id'];
     code = json['code'];
     message = json['message'];
@@ -48,7 +49,7 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['$id'] = id;
-    data['Id'] = iD;
+    data['Id'] = id;
     data['Name'] = name;
     data['Email'] = email;
     data['Token'] = token;
