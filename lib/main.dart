@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:login_api_bloc/presentation/screens/home_page/bloc/user_detail_bloc.dart';
 import 'package:login_api_bloc/presentation/screens/home_page/home_page_ui/home_page_screen.dart';
+import 'package:login_api_bloc/presentation/screens/home_page/repository/user_detail_repository.dart';
 import 'package:login_api_bloc/presentation/screens/login/bloc/login_bloc.dart';
 import 'package:login_api_bloc/presentation/screens/login/repository/login_repository.dart';
 import 'package:login_api_bloc/presentation/screens/registration/bloc/register_bloc.dart';
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<LoginBloc>(create: (context) => LoginBloc(LoginRepository())),
         BlocProvider<RegisterBloc>(create: (context) => RegisterBloc(RegisterRepository())),
+        BlocProvider<UserDetailBloc>(create: (context) => UserDetailBloc(UserDetailRepository())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

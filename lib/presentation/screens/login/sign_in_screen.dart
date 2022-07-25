@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:login_api_bloc/constant/text_field_validator.dart';
 import 'package:login_api_bloc/presentation/screens/home_page/home_page_ui/home_page_screen.dart';
@@ -49,10 +51,14 @@ class _SignInState extends State<SignIn> with Validator{
               child: BlocConsumer<LoginBloc, LoginState>(
                 listener: (context, state) async {
                   if (state is LoginStateLoaded) {
+                     if (kDebugMode) {
+                       log(state.responseModel.data!.token.toString());
+                     }
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         backgroundColor: Colors.blue,
                           content: Text("Logged in successfully")));
                       loginData = await SharedPreferences.getInstance();
+                      loginData.setString("token", state.responseModel.data!.token.toString());
                       loginData.setBool('login', true);
                       loginData.setString('username', state.responseModel.data!.email.toString());
                       Navigator.push(context,

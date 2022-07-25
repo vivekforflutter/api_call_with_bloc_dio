@@ -1,10 +1,15 @@
 
+import 'dart:convert';
 import 'dart:developer';
 import 'package:login_api_bloc/api/urls.dart';
+import 'package:login_api_bloc/presentation/screens/home_page/model/user_detail_request_model_pagewise.dart';
+import 'package:login_api_bloc/presentation/screens/home_page/model/user_detail_response_model.dart';
 import 'package:login_api_bloc/presentation/screens/login/model/login_request_model.dart';
 import 'package:login_api_bloc/presentation/screens/registration/model/register_request_model.dart';
 import '../presentation/screens/login/model/login_response_model.dart';
 import '../presentation/screens/registration/model/register_response_model.dart';
+import '../presentation/screens/user_detail_screen/model/user_modal_request_idwise.dart';
+import '../presentation/screens/user_detail_screen/model/user_modal_response.dart';
 import 'api_helper.dart';
 
 class ApiProvider with ApiHelper{
@@ -36,6 +41,28 @@ class ApiProvider with ApiHelper{
       }
     }
     return null;
+  }
+  Future<UserDetailsResponseModel> fetchUserDetails(UserRequestModelPagewise requestModelPagewise) async{
+    final response = await getTypeHelper(Url.usersUrl, requestModelPagewise);
+    if (response["statusCode"] == 200){
+      log("i am here");
+      return UserDetailsResponseModel.fromJson(response["body"]);
+    }
+    else{
+      throw Exception('Failed to load data');
+    }
+
+  }
+  Future<UserModalResponse> fetchUserDetailsIdWise(UserModalRequest requestModalIdWise) async{
+    final response = await getTypeHelper(Url.usersUrl,requestModalIdWise);
+    if (response["statusCode"] == 200){
+      log("i am here");
+      return UserModalResponse.fromJson(response["body"]);
+    }
+    else{
+      throw Exception('Failed to load data');
+    }
+
   }
 }
 

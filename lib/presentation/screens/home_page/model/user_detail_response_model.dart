@@ -63,7 +63,7 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['$id'];
-    id = json['id'];
+    iD = json['id'];
     name = json['name'];
     email = json['email'];
     profilepicture = json['profilepicture'];
