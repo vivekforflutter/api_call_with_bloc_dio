@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:developer';
 import 'package:login_api_bloc/api/urls.dart';
@@ -62,7 +61,17 @@ class ApiProvider with ApiHelper{
     else{
       throw Exception('Failed to load data');
     }
+  }
+  Future<UserDetailsResponseModel> fetchAlbum() async {
+    final response = await getTypeHelper(Url.usersUrl, {});
 
+    if (response.statusCode == 200) {
+      return UserDetailsResponseModel.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
   }
 }
 

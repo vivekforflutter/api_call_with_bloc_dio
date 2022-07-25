@@ -15,6 +15,7 @@ class UserDetailsResponseModel {
         this.data});
 
 
+
   UserDetailsResponseModel.fromJson(Map<String, dynamic> json) {
     id = json['$id'];
     page = json['page'];
