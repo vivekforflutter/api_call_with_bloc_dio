@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../presentation/screens/login/sign_in_screen.dart';
+import '../presentation/screens/login/login_in_ui.dart';
 
 mixin LogOut{
   void logOut(BuildContext context) async{

@@ -1,27 +1,31 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:login_api_bloc/constant/text_field_validator.dart';
+import 'package:login_api_bloc/helper/text_field_validator.dart';
 import 'package:login_api_bloc/presentation/screens/home_page/home_page_ui/home_page_screen.dart';
 import 'package:login_api_bloc/presentation/screens/login/bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:login_api_bloc/presentation/screens/login/sign_in_screen.dart';
-import 'package:login_api_bloc/presentation/screens/registration/bloc/register_bloc.dart';
-import 'package:login_api_bloc/presentation/screens/registration/repository/register_repository.dart';
-import '../../widgets/text_field.dart';
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+import 'package:login_api_bloc/presentation/screens/login/repository/login_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../widgets/custom_text_field.dart';
+import '../registration/registration_ui.dart';
+class SignIn extends StatefulWidget {
+  const SignIn({Key? key}) : super(key: key);
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<SignIn> createState() => _SignInState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> with Validator{
-  TextEditingController nameController = TextEditingController();
+class _SignInState extends State<SignIn> with Validator{
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  late SharedPreferences loginData;
+  late bool newUser;
+
   final formkey = GlobalKey<FormState>();
-    final RegisterBloc _registerBloc = RegisterBloc(RegisterRepository());
+    final LoginBloc _loginBloc = LoginBloc(LoginRepository());
 
   @override
   Widget build(BuildContext context) {
@@ -29,29 +33,36 @@ class _RegisterScreenState extends State<RegisterScreen> with Validator{
       child: Scaffold(
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          child: BlocProvider<RegisterBloc>(
-            create: (context) => _registerBloc,
-            child: BlocListener<RegisterBloc, RegisterState>(
-              listener: (context, userRegisterState) {
-                if (userRegisterState is RegisterStateLoaded) {
+          child: BlocProvider<LoginBloc>(
+            create: (context) => _loginBloc,
+            child: BlocListener<LoginBloc, LoginState>(
+              listener: (context, userLoginState) {
+                if (userLoginState is LoginStateLoaded) {
                   ScaffoldMessenger.of(context).showSnackBar( SnackBar(
                       backgroundColor: Colors.blue,
-                      content: Text(userRegisterState.responseModel.message.toString())));
+                      content: Text(userLoginState.responseModel.message.toString())));
                 }
-                if (userRegisterState is RegisterStateError) {
+                if (userLoginState is LoginStateError) {
                   ScaffoldMessenger.of(context).showSnackBar( SnackBar(
                       backgroundColor: Colors.red,
-                      content: Text(userRegisterState.message.toString())));
+                      content: Text(userLoginState.message.toString())));
                 }
               },
-              child: BlocConsumer<RegisterBloc, RegisterState>(
-                listener: (context, state) {
-                  if (state is RegisterStateLoaded) {
+              child: BlocConsumer<LoginBloc, LoginState>(
+                listener: (context, state) async {
+                  if (state is LoginStateLoaded) {
+                     if (kDebugMode) {
+                       log(state.responseModel.data!.token.toString());
+                     }
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         backgroundColor: Colors.blue,
                           content: Text("Logged in successfully")));
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const HomePage()));
+                      loginData = await SharedPreferences.getInstance();
+                      loginData.setString("token", state.responseModel.data!.token.toString());
+                      loginData.setBool('login', true);
+                      loginData.setString('username', state.responseModel.data!.email.toString());
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => const HomePage()));
                      }
                 },
                 builder: (context, state) {
@@ -79,18 +90,16 @@ class _RegisterScreenState extends State<RegisterScreen> with Validator{
 
                       ),
                     ),
-                    child: const Text('Sign Up',style: TextStyle(fontSize: 17,color: Colors.black),),
+                    child: const Text('Log In',style: TextStyle(fontSize: 17,color: Colors.black),),
                     onPressed: () {
 
+
                       if(formkey.currentState!.validate()){
-                        BlocProvider.of<RegisterBloc>(context).add(RegisterEvent(
-                            nameController.text.toString(),
+                        BlocProvider.of<LoginBloc>(context).add(LoginEvent(
                             emailController.text.toString(),
                             passwordController.text.toString()));
-
-
+                        }
                       }
-                    },
                   );
                 },
               ),
@@ -106,51 +115,34 @@ class _RegisterScreenState extends State<RegisterScreen> with Validator{
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  height: MediaQuery.of(context).size.height / 2.7,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
-                    image: DecorationImage(
-                        image: AssetImage("assets/image2.png"), fit: BoxFit.cover),
-                  ),
+                const Text(
+                  '  Let\'s sign you in.',
+                  style: TextStyle(
+                    height: 3,
+                    leadingDistribution: TextLeadingDistribution.proportional,
+                      letterSpacing: 0.5,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 30,),
                 ),
-                const Center(
-                  child: Text(
-                    '  Create account',
-                    style: TextStyle(
-                      height: 3,
-                      leadingDistribution: TextLeadingDistribution.proportional,
-                        letterSpacing: 0.5,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 30,),
-                  ),
+                const Text(
+                  '  Welcome back\n  You\'ve been missed',
+                  style: TextStyle(
+                    height: 1.3,
+                    leadingDistribution: TextLeadingDistribution.even,
+                    letterSpacing: 0.3,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w300,
+                    fontSize: 30,),
                 ),
-
-
+                const SizedBox(height: 50,),
                 Container(
-                    margin: const EdgeInsets.fromLTRB(20, 50, 20, 10),
-                    child: CustomTextField(
-                        autoValidate: AutovalidateMode.disabled,
-                        controller: nameController,
-                        obscureText: false,
-                        hintText: "Name",
-                        onChanged: (v){
-                        },
-                        validator: (v){
-                          return null;
-                        }
-                    )
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                  margin: const EdgeInsets.fromLTRB(20, 50, 20, 10),
                   child: CustomTextField(
                     autoValidate: AutovalidateMode.onUserInteraction,
                     controller: emailController,
                     obscureText: false,
-                    hintText: "Email",
+                    hintText: "Username",
                     onChanged: (v){
                     },
                     validator: (str) {
@@ -180,11 +172,11 @@ class _RegisterScreenState extends State<RegisterScreen> with Validator{
                     const Text('Does not have account?',style: TextStyle(fontSize: 15,color: Colors.grey),),
                     TextButton(
                       child: const Text(
-                        'Login',
+                        'Register',
                         style: TextStyle(fontSize: 15,color: Colors.white),
                       ),
                       onPressed: () {
-                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SignIn()));
+                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegisterScreen()));
                       },
                     )
                   ],

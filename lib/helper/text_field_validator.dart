@@ -15,4 +15,7 @@ mixin Validator{
       return "Please Enter Email";
   }
   }
+  validatePassword(String value)  {
+
+  }
 }

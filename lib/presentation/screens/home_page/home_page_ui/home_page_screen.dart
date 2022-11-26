@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:login_api_bloc/presentation/screens/home_page/bloc/user_detail_bloc.dart';
 import 'package:login_api_bloc/presentation/widgets/custom_card_widget.dart';
-import '../../../../logOut/logOut.dart';
+import '../../../../helper/logOut.dart';
 import '../repository/user_detail_repository.dart';
 
 class HomePage extends StatefulWidget {
